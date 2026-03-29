@@ -28,18 +28,18 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_DATASET_REPO: ${{ secrets.HF_DATASET_REPO }}
-        run: python tourism_mlops_project/src/data_preparation.py
+        run: python src/data_preparation.py
 
       - name: Train model
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_DATASET_REPO: ${{ secrets.HF_DATASET_REPO }}
           HF_MODEL_REPO: ${{ secrets.HF_MODEL_REPO }}
-        run: python tourism_mlops_project/src/train_model.py
+        run: python src/train_model.py
 
       - name: Push deployment files to Hugging Face Space
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
     HF_SPACE_REPO: ${{ secrets.HF_SPACE_REPO }}
     HF_MODEL_REPO: ${{ secrets.HF_MODEL_REPO }}
-  run: python tourism_mlops_project/deployment/push_to_hf_space.py
+  run: python deployment/push_to_hf_space.py
