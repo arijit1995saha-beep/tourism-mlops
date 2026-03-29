@@ -40,5 +40,6 @@ jobs:
       - name: Push deployment files to Hugging Face Space
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-          HF_SPACE_REPO: ${{ secrets.HF_SPACE_REPO }}
-        run: python tourism_mlops_project/deployment/push_to_hf_space.py
+    HF_SPACE_REPO: ${{ secrets.HF_SPACE_REPO }}
+    HF_MODEL_REPO: ${{ secrets.HF_MODEL_REPO }}
+  run: python tourism_mlops_project/deployment/push_to_hf_space.py

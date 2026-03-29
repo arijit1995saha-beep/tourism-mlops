@@ -2,14 +2,15 @@ import os
 from pathlib import Path
 from huggingface_hub import create_repo, upload_folder
 
-HF_SPACE_REPO = os.getenv("HF_SPACE_REPO", "your-username/tourism-package-space")
+HF_SPACE_REPO = os.getenv("HF_SPACE_REPO")
 HF_TOKEN = os.getenv("HF_TOKEN")
 DEPLOYMENT_DIR = Path(__file__).resolve().parent
 
 def main():
     if not HF_TOKEN:
-        print("HF_TOKEN not found. Skipping upload.")
-        return
+        raise ValueError("HF_TOKEN not found.")
+    if not HF_SPACE_REPO:
+        raise ValueError("HF_SPACE_REPO not found.")
 
     create_repo(
         repo_id=HF_SPACE_REPO,

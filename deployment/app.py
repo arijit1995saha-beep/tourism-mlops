@@ -11,12 +11,19 @@ st.set_page_config(page_title="Tourism Package Predictor", page_icon="🌍")
 st.title("🌍 Wellness Tourism Package Predictor")
 st.write("Enter customer details to predict package purchase.")
 
-HF_MODEL_REPO = os.getenv("HF_MODEL_REPO", "your-username/tourism-package-model")
+HF_MODEL_REPO = os.getenv("HF_MODEL_REPO")
 HF_TOKEN = os.getenv("HF_TOKEN")
-LOCAL_MODEL_PATH = Path(__file__).resolve().parents[1] / "artifacts" / "best_model.joblib"
+
+st.write("Checking deployment configuration...")
+st.write("HF_MODEL_REPO set:", bool(HF_MODEL_REPO))
+st.write("HF_TOKEN set:", bool(HF_TOKEN))
 
 @st.cache_resource
 def load_model():
+    if not HF_MODEL_REPO:
+        st.error("HF_MODEL_REPO is missing. Add it in Hugging Face Space Settings > Variables and secrets.")
+        st.stop()
+
     try:
         model_path = hf_hub_download(
             repo_id=HF_MODEL_REPO,
@@ -25,11 +32,12 @@ def load_model():
             token=HF_TOKEN,
         )
         return joblib.load(model_path)
-    except Exception:
-        return joblib.load(LOCAL_MODEL_PATH)
+    except Exception as e:
+        st.error(f"Model could not be loaded from Hugging Face Model Hub: {e}")
+        st.stop()
 
 model = load_model()
-
+st.success("Model loaded successfully.")
 with st.form("prediction_form"):
     age = st.number_input("Age", min_value=18, max_value=80, value=35)
     typeofcontact = st.selectbox("TypeofContact", ["Company Invited", "Self Inquiry", "Self Enquiry"])
